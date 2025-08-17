@@ -50,7 +50,7 @@ function getImagePath(originalPath: string, shopCategory: string): string {
 
 async function migrateData() {
   try {
-    console.log('Attempting to connect to MongoDB at:', MONGODB_URI);
+    console.log('ATTEMPTING TO CONNECT TO MONGODB AT:', MONGODB_URI);
     
     /* CONNECT TO MONGODB WITH OPTIONS */
     await mongoose.connect(MONGODB_URI, {
@@ -58,7 +58,7 @@ async function migrateData() {
       socketTimeoutMS: 45000, /* CLOSE SOCKETS AFTER 45S */
     });
     
-    console.log('Successfully connected to MongoDB');
+    console.log('SUCCESSFULLY CONNECTED TO MONGODB');
 
     /* GET THE PROJECT ROOT DIRECTORY (ONE LEVEL UP FROM SCRIPTS) */
     const projectRoot = path.resolve(__dirname, '..');
@@ -72,7 +72,7 @@ async function migrateData() {
 
     /* CLEAR EXISTING PRODUCTS */
     await Product.deleteMany({});
-    console.log('Cleared existing products');
+    console.log('CLEARED EXISTING PRODUCTS');
 
     /* CREATE A MAP TO TRACK USED IDS */
     const usedIds = new Set<string>();
@@ -102,11 +102,11 @@ async function migrateData() {
 
     /* INSERT PRODUCTS */
     await Product.insertMany(products);
-    console.log(`Migrated ${products.length} products`);
+    console.log(`MIGRATED ${products.length} PRODUCTS`);
 
-    console.log('Migration completed successfully');
+    console.log('MIGRATION COMPLETED SUCCESSFULLY');
   } catch (error) {
-    console.error('Migration failed:', error);
+    console.error('MIGRATION FAILED:', error);
   } finally {
     await mongoose.disconnect();
   }
