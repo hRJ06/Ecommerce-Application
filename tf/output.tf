@@ -22,7 +22,7 @@ output "eks_cluster_endpoint" {
 
 output "public_ip" {
   description = "EC2 INSTANCE PUBLIC IP"
-  value       = aws_instance.testinstance.public_ip
+  value       = aws_instance.ec2_instance.public_ip
 }
 
 output "eks_node_group_public_ips" {

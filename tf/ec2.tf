@@ -16,6 +16,10 @@ resource "aws_key_pair" "key_pair" {
   public_key = file("EC2-Key.pub")
 }
 
+resource "aws_default_vpc" "default" {
+
+}
+
 resource "aws_security_group" "ec2_sg" {
   name        = "ALLOW TLS"
   description = "ALLOW USER TO ACCESS"
@@ -68,8 +72,8 @@ resource "aws_security_group" "ec2_sg" {
 resource "aws_instance" "ec2_instance" {
   ami             = data.aws_ami.os_image.id
   instance_type   = var.instance_type 
-  key_name        = aws_key_pair.deployer.key_name
-  security_groups = [aws_security_group.allow_user_to_connect.name]
+  key_name        = aws_key_pair.key_pair.key_name
+  security_groups = [aws_security_group.ec2_sg.name]
   user_data = file("${path.module}/install_tool.sh")
   tags = {
     Name = "JENKINS-AUTOMATE"
