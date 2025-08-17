@@ -9,4 +9,4 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /data/mongodb
-  persistentVolumeClaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Retain
