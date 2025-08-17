@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ecommerce-app
-          image: hrj06/ecommerce-app:7
+          image: hrj06/ecommerce-app:8
           imagePullPolicy: Always
           ports:
             - containerPort: 3000

@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: migration
-        image: hrj06/ecommerce-migration:1
+        image: hrj06/ecommerce-migration:8
         imagePullPolicy: Always
         envFrom:
           - configMapRef:
