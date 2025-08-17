@@ -23,7 +23,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    clone("https://github.com/hRJ06/Ecommerce-Application","main")
+                    clone("https://github.com/hRJ06/Ecommerce-Application",env.GIT_BRANCH)
                 }
             }
         }
@@ -108,7 +108,7 @@ pipeline {
                         imageTag: env.DOCKER_IMAGE_TAG,
                         manifestsPath: 'kubernetes',
                         gitCredentials: 'github-credentials',
-                        gitUserName: 'Jenkins CI',
+                        gitUserName: 'hRJ06',
                         gitUserEmail: 'hindolroy.2306@@gmail.com'
                     )
                 }
