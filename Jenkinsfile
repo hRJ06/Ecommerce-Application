@@ -61,7 +61,7 @@ pipeline {
         stage('Run Unit Test') {
             steps {
                 script {
-                    run_tests()
+                    run_test()
                 }
             }
         }
