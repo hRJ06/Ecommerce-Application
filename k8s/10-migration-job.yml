@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migration
+  namespace: ecommerce-ns
+spec:
+  template:
+    spec:
+      containers:
+      - name: migration
+        image: hrj06/ecommerce-migration:1
+        imagePullPolicy: Always
+        envFrom:
+          - configMapRef:
+              name: ecommerce-config
+        env:
+          - name: MONGODB_URI
+            valueFrom:
+              configMapKeyRef:
+                name: ecommerce-config
+                key: MONGODB_URI
+      restartPolicy: OnFailure

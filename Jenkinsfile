@@ -4,7 +4,6 @@ pipeline {
     agent any
     
     environment {
-        // Update the main app image name to match the deployment file
         DOCKER_IMAGE_NAME = 'hrj06/ecommerce-app'
         DOCKER_MIGRATION_IMAGE_NAME = 'hrj06/ecommerce-migration'
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
