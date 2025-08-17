@@ -104,9 +104,9 @@ pipeline {
         stage('Update Kubernetes Manifest') {
             steps {
                 script {
-                    update_k8s_manifests(
+                    update_k8s_manifest(
                         imageTag: env.DOCKER_IMAGE_TAG,
-                        manifestsPath: 'kubernetes',
+                        manifestsPath: 'k8s',
                         gitCredentials: 'github-credentials',
                         gitUserName: 'hRJ06',
                         gitUserEmail: 'hindolroy.2306@@gmail.com'
