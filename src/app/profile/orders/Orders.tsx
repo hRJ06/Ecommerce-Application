@@ -74,7 +74,7 @@ const Orders = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading orders...</div>
+        <div className="text-center">Loading Orders</div>
       </div>
     );
   }

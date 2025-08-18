@@ -4,7 +4,7 @@ metadata:
   name: ecommerce-config
   namespace: ecommerce-ns
 data:
-  MONGODB_URI: "mongodb://mongodb-svc:27017/easyshop"
+  MONGODB_URI: "mongodb://mongodb-svc:27017/<DB_NAME>"
   NODE_ENV: "production"
-  NEXT_PUBLIC_API_URL: "http://a7652a22e1d714849b6e8c22a5527fe4-1702608825.eu-west-1.elb.amazonaws.com/api"
-  NEXTAUTH_URL: "http://a7652a22e1d714849b6e8c22a5527fe4-1702608825.eu-west-1.elb.amazonaws.com/"
+  NEXT_PUBLIC_API_URL: "http://<ELB_DNS>/api"
+  NEXTAUTH_URL: "http://<ELB_DNS>"

@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const query: any = {};
     
-    // Search by title or description
     if (searchParams.has('search')) {
       const searchRegex = new RegExp(searchParams.get('search') as string, 'i');
       query.$or = [
@@ -19,18 +18,15 @@ export async function GET(request: NextRequest) {
       ];
     }
     
-    // Filter by shop category
     if (searchParams.has('shop_category')) {
       query.shop_category = searchParams.get('shop_category');
     }
     
-    // Filter by categories
     if (searchParams.has('categories')) {
       const categories = searchParams.get('categories')?.split(',') || [];
       query.categories = { $in: categories };
     }
 
-    // Filter by price range
     if (searchParams.has('minPrice') || searchParams.has('maxPrice')) {
       query.price = {};
       if (searchParams.has('minPrice')) {
@@ -41,12 +37,10 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Pagination
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const skip = (page - 1) * limit;
 
-    // Sorting
     let sort: any = { createdAt: -1 };
     if (searchParams.has('sort')) {
       const [field, order] = (searchParams.get('sort') as string).split(':');
@@ -70,7 +64,7 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error('ERROR FETCHING PRODUCTS - ', error);
     return NextResponse.json(
       { error: 'Failed to fetch products' },
       { status: 500 }
@@ -95,7 +89,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(product, { status: 201 });
   } catch (error: any) {
-    console.error('Error creating product:', error);
+    console.error('ERROR CREATING PRODUCT -', error);
     return NextResponse.json(
       { error: error.message || 'Internal Server Error' },
       { status: error.message === 'Authentication required' ? 401 : 500 }

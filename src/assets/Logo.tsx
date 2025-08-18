@@ -13,7 +13,6 @@ const Logo = () => {
         <p className="text-xl font-semibold whitespace-nowrap">
           Easy <span className="text-primary">Shop</span>
         </p>
-        {/* <p className="text-xs">Enjoy shopping</p> */}
       </div>
     </Link>
   );

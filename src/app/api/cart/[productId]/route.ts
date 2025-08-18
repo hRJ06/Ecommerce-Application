@@ -3,7 +3,6 @@ import dbConnect from '@/lib/db';
 import Cart from '@/lib/models/cart';
 import { requireAuth } from '@/lib/auth/utils';
 
-// Update cart item quantity
 export async function PUT(
   request: NextRequest,
   { params }: { params: { productId: string } }
@@ -46,7 +45,6 @@ export async function PUT(
   }
 }
 
-// Remove item from cart
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { productId: string } }

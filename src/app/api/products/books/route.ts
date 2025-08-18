@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ products });
   } catch (error) {
-    console.error('Error fetching books:', error);
+    console.error('ERROR FETCHING BOOKS - ', error);
     return NextResponse.json(
       { error: 'Failed to fetch books' },
       { status: 500 }

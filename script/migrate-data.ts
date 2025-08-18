@@ -60,7 +60,7 @@ async function migrateData() {
     
     console.log('SUCCESSFULLY CONNECTED TO MONGODB');
 
-    /* GET THE PROJECT ROOT DIRECTORY (ONE LEVEL UP FROM SCRIPTS) */
+    /* GET THE PROJECT ROOT DIRECTORY (ONE LEVEL UP FROM SCRIPT) */
     const projectRoot = path.resolve(__dirname, '..');
     
     /* READ THE JSON FILE FROM THE PROJECT ROOT */

@@ -3,26 +3,22 @@ import dbConnect from '@/lib/db';
 import Product from '@/lib/models/product';
 import { requireAuth } from '@/lib/auth/utils';
 
-// Get single product
 export async function GET(
   request: NextRequest,
   { params }: { params: { productId: string } }
 ) {
   try {
     await dbConnect();
-    
     const product = await Product.findOne({ originalId: params.productId });
-    
     if (!product) {
       return NextResponse.json(
         { error: 'Product not found' },
         { status: 404 }
       );
     }
-    
     return NextResponse.json(product);
   } catch (error: any) {
-    console.error('Product error:', error);
+    console.error('PRODUCT ERROR - ', error);
     return NextResponse.json(
       { error: error.message || 'Internal Server Error' },
       { status: 500 }
@@ -30,21 +26,17 @@ export async function GET(
   }
 }
 
-// Create single product
 export async function POST(
   request: NextRequest,
   { params }: { params: { productId: string } }
 ) {
   try {
     await dbConnect();
-    
     const body = await request.json();
-    
     const product = await Product.create(body);
-    
     return NextResponse.json(product);
   } catch (error: any) {
-    console.error('Product error:', error);
+    console.error('PRODUCT ERROR - ', error);
     return NextResponse.json(
       { error: error.message || 'Internal Server Error' },
       { status: 500 }
@@ -52,7 +44,6 @@ export async function POST(
   }
 }
 
-// Update product (admin only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: { productId: string } }
@@ -65,23 +56,19 @@ export async function PUT(
         { status: 403 }
       );
     }
-    
     await dbConnect();
     const body = await request.json();
-    
     const product = await Product.findOneAndUpdate(
       { originalId: params.productId },
       body,
       { new: true, runValidators: true }
     );
-    
     if (!product) {
       return NextResponse.json(
         { error: 'Product not found' },
         { status: 404 }
       );
     }
-    
     return NextResponse.json(product);
   } catch (error: any) {
     return NextResponse.json(
@@ -91,7 +78,6 @@ export async function PUT(
   }
 }
 
-// Delete product (admin only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { productId: string } }
@@ -104,9 +90,7 @@ export async function DELETE(
         { status: 403 }
       );
     }
-    
     await dbConnect();
-    
     const product = await Product.findOneAndDelete({ originalId: params.productId });
     if (!product) {
       return NextResponse.json(
@@ -114,7 +98,6 @@ export async function DELETE(
         { status: 404 }
       );
     }
-    
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json(

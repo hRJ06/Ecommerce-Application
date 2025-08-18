@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Product from '@/lib/models/product';
 
-// Map frontend categories to database categories
 const categoryMap: { [key: string]: string } = {
   electronics: 'gadgets',
   gadgets: 'gadgets',
@@ -21,33 +20,30 @@ const categoryMap: { [key: string]: string } = {
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
-    console.log('Connected to MongoDB');
+    console.log('CONNECTED TO MONGODB');
     
     const { searchParams } = new URL(request.url);
     const requestedCategory = searchParams.get('category') || 'electronics';
     const category = categoryMap[requestedCategory] || requestedCategory;
-    console.log('Requested category:', requestedCategory, '-> Mapped to:', category);
+    console.log('REQUESTED CATEGORY - ', requestedCategory, '-> MAPPED TO - ', category);
     
-    // Build query based on category
     const query: any = {};
     if (category !== 'all') {
       query.shop_category = category;
     }
-    console.log('Query:', JSON.stringify(query));
+    console.log('QUERY:', JSON.stringify(query));
     
-    // First, check if we have any products matching the category
     const count = await Product.countDocuments(query);
-    console.log('Matching products count:', count);
+    console.log('MATCHING PRODUCTS COUNT - ', count);
 
-    // Get featured products - best sellers based on rating and sales
     const products = await Product.aggregate([
       { $match: query },
       {
         $addFields: {
           score: {
             $multiply: [
-              { $ifNull: ['$rating', 0] },  // Rating score
-              { $add: [{ $ifNull: ['$sales', 0] }, 1] }  // Sales score (add 1 to avoid multiplication by 0)
+              { $ifNull: ['$rating', 0] },
+              { $add: [{ $ifNull: ['$sales', 0] }, 1] }
             ]
           }
         }
@@ -56,11 +52,11 @@ export async function GET(request: NextRequest) {
       { $limit: 8 }
     ]);
     
-    console.log('Found featured products:', products.length);
+    console.log('FOUND FEATURED PRODUCTS - ', products.length);
     
     return NextResponse.json(products);
   } catch (error) {
-    console.error('Featured products error:', error);
+    console.error('FEATURED PRODUCTS ERROR -', error);
     return NextResponse.json(
       { error: 'Failed to fetch featured products' },
       { status: 500 }

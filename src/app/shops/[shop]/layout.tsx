@@ -44,7 +44,6 @@ type LayoutProps = Readonly<{
   };
 }>;
 
-// Dynamic metadata
 export async function generateMetadata({ params }: LayoutProps) {
   const { shop } = await params;
   return {
@@ -52,7 +51,6 @@ export async function generateMetadata({ params }: LayoutProps) {
   };
 }
 
-// generate static site params for all shops
 export async function generateStaticParams() {
   const shops = Object.keys(layoutSettings);
 

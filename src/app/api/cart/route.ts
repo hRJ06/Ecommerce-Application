@@ -5,7 +5,6 @@ import Cart from '@/lib/models/cart';
 import Product from '@/lib/models/product';
 import { requireAuth } from '@/lib/auth/utils';
 
-// Get user's cart
 export async function GET(request: NextRequest) {
   try {
     const auth = await requireAuth(request);
@@ -14,11 +13,10 @@ export async function GET(request: NextRequest) {
     const cart = await Cart.findOne({ user: auth.userId });
     
     if (!cart) {
-      console.log('No cart found for user:', auth.userId);
+      console.log('NO CART FOUND FOR USER - ', auth.userId);
       return NextResponse.json({ items: [], total: 0 });
     }
 
-    // Populate product details
     const populatedItems = await Promise.all(
       cart.items.map(async (item: any) => {
         const product = await Product.findOne({ originalId: item.product });
@@ -41,10 +39,10 @@ export async function GET(request: NextRequest) {
       items: populatedItems
     };
     
-    console.log('Cart found:', populatedCart);
+    console.log('CART FOUND - ', populatedCart);
     return NextResponse.json(populatedCart);
   } catch (error: any) {
-    console.error('Cart error:', error);
+    console.error('CART ERROR - ', error);
     return NextResponse.json(
       { error: error.message || 'Internal Server Error' },
       { status: error.message === 'Authentication required' ? 401 : 500 }
@@ -52,7 +50,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Add/Update cart item
 export async function POST(request: NextRequest) {
   try {
     const auth = await requireAuth(request);
@@ -61,24 +58,22 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { productId, quantity, price } = body;
 
-    console.log('Adding to cart:', { productId, quantity, price });
+    console.log('ADDING TO CART - ', { productId, quantity, price });
 
-    // Verify product exists
     const product = await Product.findOne({ originalId: productId });
     if (!product) {
-      console.log('Product not found:', productId);
+      console.log('PRODUCT NOT FOUND - ', productId);
       return NextResponse.json(
         { error: 'Product not found' },
         { status: 404 }
       );
     }
 
-    console.log('Found product:', product);
+    console.log('FOUND PRODUCT - ', product);
 
-    // Find or create cart
     let cart = await Cart.findOne({ user: auth.userId });
     if (!cart) {
-      console.log('Creating new cart for user:', auth.userId);
+      console.log('CREATING NEW CART FOR USER - ', auth.userId);
       cart = new Cart({
         user: auth.userId,
         items: [],
@@ -86,42 +81,35 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create cart item
     const cartItem = {
       product: product.originalId,
       quantity,
       price
     };
 
-    console.log('Cart item:', cartItem);
+    console.log('CART ITEM - ', cartItem);
 
-    // Find item in cart
     const existingItemIndex = cart.items.findIndex(
       item => item.product === product.originalId
     );
 
     if (existingItemIndex > -1) {
-      console.log('Updating existing item at index:', existingItemIndex);
-      // Update existing item
+      console.log('UPDATING EXISTING ITEM AT INDEX - ', existingItemIndex);
       cart.items[existingItemIndex].quantity = quantity;
       cart.items[existingItemIndex].price = price;
     } else {
-      console.log('Adding new item to cart');
-      // Add new item
+      console.log('ADDING NEW ITEM TO CART');
       cart.items.push(cartItem);
     }
 
-    // Update total
     cart.total = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    console.log('Cart before save:', cart);
+    console.log('CART BEFORE SAVE - ', cart);
 
-    // Save cart
     await cart.save();
 
-    console.log('Cart saved successfully');
+    console.log('CART SAVED SUCCESSFULLY');
 
-    // Populate product details for response
     const populatedItems = await Promise.all(
       cart.items.map(async (item: any) => {
         const product = await Product.findOne({ originalId: item.product });
@@ -144,11 +132,11 @@ export async function POST(request: NextRequest) {
       items: populatedItems
     };
 
-    console.log('Populated cart:', populatedCart);
+    console.log('POPULATED CART - ', populatedCart);
 
     return NextResponse.json(populatedCart);
   } catch (error: any) {
-    console.error('Cart error:', error);
+    console.error('CART ERROR - ', error);
     return NextResponse.json(
       { error: error.message || 'Internal Server Error' },
       { status: error.message === 'Authentication required' ? 401 : 500 }
@@ -156,19 +144,18 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Clear cart
 export async function DELETE(request: NextRequest) {
   try {
     const auth = await requireAuth(request);
     await dbConnect();
     
-    console.log('Clearing cart for user:', auth.userId);
+    console.log('CLEARING CART FOR USER - ', auth.userId);
     await Cart.findOneAndDelete({ user: auth.userId });
     
-    console.log('Cart cleared successfully');
+    console.log('CART CLEARED SUCCESSFULLY');
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('Cart error:', error);
+    console.error('CART ERROR - ', error);
     return NextResponse.json(
       { error: error.message || 'Internal Server Error' },
       { status: error.message === 'Authentication required' ? 401 : 500 }

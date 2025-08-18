@@ -3,11 +3,9 @@ import type { NextRequest } from "next/server";
 import { getTokenFromRequest, isAuthenticated } from "./lib/auth/utils";
 
 export async function middleware(request: NextRequest) {
-  // Get token and check auth status
   const token = getTokenFromRequest(request);
   const isAuth = token ? await isAuthenticated(request) : null;
   
-  // Define protected and auth pages
   const isAuthPage = request.nextUrl.pathname.startsWith("/login") || 
                     request.nextUrl.pathname.startsWith("/register");
   const protectedRoutes = ["/checkout", "/profile", "/admin"];
@@ -15,14 +13,12 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith(route)
   );
 
-  // If trying to access protected routes without authentication
   if (isProtectedRoute && !isAuth) {
     const redirectUrl = new URL("/login", request.url);
     redirectUrl.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  // If trying to access auth pages while logged in
   if (isAuthPage && isAuth) {
     const redirectTo = request.nextUrl.searchParams.get('redirect');
     if (redirectTo) {
@@ -31,12 +27,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // If trying to access admin pages without admin role
   if (request.nextUrl.pathname.startsWith("/admin") && isAuth?.role !== "admin") {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Add user info to headers if authenticated
   const requestHeaders = new Headers(request.headers);
   if (isAuth) {
     requestHeaders.set("x-user-id", isAuth.userId);

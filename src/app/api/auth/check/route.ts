@@ -5,24 +5,23 @@ import dbConnect from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('Checking authentication status');
+    console.log("CHECKING AUTHENTICATION STATUS");
     const auth = await isAuthenticated(request);
     
     if (!auth || !auth.userId) {
-      console.log('No valid authentication found');
+      console.log("NO VALID AUTHENTICATION FOUND");
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
-    // Connect to database and get user details
     await dbConnect();
-    const user = await User.findById(auth.userId).select('-password');
+    const user = await User.findById(auth.userId).select("-password");
     
     if (!user) {
-      console.log('User not found:', auth.userId);
+      console.log("USER NOT FOUND - ", auth.userId);
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
-    console.log('User authenticated:', user._id);
+    console.log("USER AUTHENTICATED -", user._id);
     return NextResponse.json({
       authenticated: true,
       user: {
@@ -33,7 +32,7 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Auth check error:', error);
+    console.error("AUTH CHECK ERROR:", error);
     return NextResponse.json(
       { error: "Authentication check failed" },
       { status: 401 }

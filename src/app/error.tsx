@@ -1,4 +1,4 @@
-"use client"; // Error components must be Client Components
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
@@ -12,8 +12,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
+    console.error("ERROR - ", error);
   }, [error]);
 
   return (
@@ -22,8 +21,7 @@ export default function Error({
         <BiError />
       </p>
       <p className="text-3xl font-semibold">Something went wrong!</p>
-
-      <Button variant={"outline"} onClick={() => reset()}>
+      <Button variant="outline" onClick={() => reset()}>
         Try Again
       </Button>
     </div>

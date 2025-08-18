@@ -3,7 +3,6 @@ import dbConnect from '@/lib/db';
 import Order from '@/lib/models/order';
 import { requireAuth } from '@/lib/auth/utils';
 
-// Get single order
 export async function GET(
   request: NextRequest,
   { params }: { params: { orderId: string } }
@@ -33,7 +32,6 @@ export async function GET(
   }
 }
 
-// Update order status (admin only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: { orderId: string } }
@@ -73,7 +71,6 @@ export async function PUT(
   }
 }
 
-// Cancel order
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { orderId: string } }
@@ -94,7 +91,6 @@ export async function DELETE(
       );
     }
     
-    // Only allow cancellation of pending orders
     if (order.status !== 'pending') {
       return NextResponse.json(
         { error: 'Cannot cancel order in current status' },

@@ -5,7 +5,6 @@ import Cart from '@/lib/models/cart';
 import Product from '@/lib/models/product';
 import { requireAuth } from '@/lib/auth/utils';
 
-// Get user's orders
 export async function GET(request: NextRequest) {
   try {
     const auth = await requireAuth(request);
@@ -21,7 +20,6 @@ export async function GET(request: NextRequest) {
       .skip(skip)
       .limit(limit);
     
-    // Populate product details
     const populatedOrders = await Promise.all(
       orders.map(async (order) => {
         const populatedItems = await Promise.all(
@@ -66,7 +64,6 @@ interface OrderItemInput {
   price: number;
 }
 
-// Create new order from cart
 export async function POST(request: NextRequest) {
   try {
     const auth = await requireAuth(request);
@@ -96,7 +93,6 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Map shipping address to match schema
     const mappedShippingAddress = {
       fullName: shippingAddress.title,
       address: shippingAddress.streetAddress,
@@ -107,7 +103,6 @@ export async function POST(request: NextRequest) {
 
     let order;
     try {
-      // Create order with mapped data
       order = await Order.create({
         user: auth.userId,
         items: items.map((item: OrderItemInput) => ({
@@ -122,7 +117,6 @@ export async function POST(request: NextRequest) {
         paymentStatus: 'pending'
       });
 
-      // Clear the cart
       await Cart.findOneAndDelete({ user: auth.userId });
 
       return NextResponse.json({
@@ -130,35 +124,12 @@ export async function POST(request: NextRequest) {
         order: order
       });
     } catch (error: any) {
-      console.error('Error creating order:', error);
+      console.error('ERROR CREATING ORDER - ', error);
       return NextResponse.json(
         { error: error.message || 'Failed to create order' },
         { status: 500 }
       );
     }
-    
-    // Populate product details
-    const populatedItems = await Promise.all(
-      order.items.map(async (item: any) => {
-        const product = await Product.findOne({ originalId: item.product });
-        const itemObj = typeof item.toObject === 'function' ? item.toObject() : item;
-        return {
-          ...itemObj,
-          product: product ? {
-            _id: product._id,
-            title: product.title,
-            price: product.price,
-            image: product.image,
-            originalId: product.originalId
-          } : null
-        };
-      })
-    );
-    
-    return NextResponse.json({
-      ...order.toObject(),
-      items: populatedItems
-    });
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || 'Internal Server Error' },

@@ -15,10 +15,8 @@ export async function generateMetadata(
   { params }: SingleProductPageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  // read route params
   const slug = params.slug;
 
-  // fetch data
   const res = await fetchData.get(`/singleProduct/${slug}`);
   const product: SingleProductType | null = res.data || null;
 
